@@ -39,19 +39,20 @@ user_input = int(input(prompt))
 
 # 1. Посмотреть список уникальных марок которые есть в нашем клубе
 def full_list():
-    all_marks = []
+    # ИСПОЛЬЗОВАТЬ: намного удобнее получать уникальные элементы с помощью множеств
+    all_marks = set()
     for member_club in marks_club:
-        for marks_id in member_club['marks_id']:
-            if marks_id not in all_marks:
-                all_marks += [marks_id]
+        # ИСПОЛЬЗОВАТЬ: и тогда здесь не потребуется вложенный цикл и дополнительные проверки
+        all_marks |= set(member_club['marks_id'])
     print(all_marks)
 
 
-# 2. Посмотреть список уникальных марок которые есть у конкретного пользователя(по его ID)
+# 2. Посмотреть список уникальных марок которые есть у конкретного пользователя (по его ID)
 def stamp_collection():
-    input_user = int(input('введите id участника клуба: '))
+    input_user = int(input('Введите ID участника клуба: '))
     for member_club in marks_club:
         if input_user == member_club['user_id']:
+            # ИСПРАВИТЬ: вы выводите все марки пользователя, а не только уникальные — используйте множества
             print(member_club['marks_id'])
 
 
@@ -65,13 +66,15 @@ def compare_two_collections():
     
     for member in marks_club:
         if member['user_id'] == int(input_id_1):
+            # ИСПРАВИТЬ: метод множеств update() принимает в качестве аргумента объект set, а здесь будет передан объект list
             marks_id_1.update(member['marks_id'])
         elif member['user_id'] == int(input_id_2):
             marks_id_2.update(member['marks_id'])
     
+    # ИСПРАВИТЬ: вы неправильно поняли задачу: необходимо вывести один перечень марок, а не два — и в этом перечне должны быть только непересекающиеся между двумя множествами марки
+    # КОММЕНТАРИЙ: используйте симметричную разность
     unique_marks_1 = marks_id_1 - marks_id_2
     unique_marks_2 = marks_id_2 - marks_id_1
-    
     print(f"Уникальные марки у пользователя с ID {input_id_1}: {list(unique_marks_1)}")
     print(f"Уникальные марки у пользователя с ID {input_id_2}: {list(unique_marks_2)}")
 
@@ -92,3 +95,5 @@ match user_input:
 
 # КОММЕНТАРИЙ: PEP 8 — сборник рекомендаций по стилистическому оформлению Python кода — их стоит использовать для большего удобства чтения своего и чужого кода: https://peps.python.org/pep-0008/
 
+
+# ИТОГ: неплохо, но нужно лучше, доработать — 7/12
